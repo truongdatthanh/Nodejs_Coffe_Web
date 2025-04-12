@@ -8,6 +8,10 @@ let paymentSchema = mongoose.Schema({
     method: {
         type: String,
     },
+    amount: {
+        type: Number,
+        default: 0
+    },
     status: {
         type: String,
         enum: ['pending', 'completed', 'failed'],
