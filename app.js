@@ -43,6 +43,7 @@ app.use('/carts', require('./routes/carts'));
 app.use('/orders', require('./routes/orders'));
 app.use('/vouchers', require('./routes/vouchers'));
 app.use('/payment', require('./routes/payment'));
+app.use('/wishlist', require('./routes/wishlist'));
 
 
 // catch 404 and forward to error handler
