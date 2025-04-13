@@ -29,9 +29,7 @@ router.post('/',check_authentication, async function (req, res, next) {
 router.delete('/:id',check_authentication, async function (req, res, next) {
     try {
         let userId = req.user._id;
-        console.log(userId);
         let productId = req.params.id;
-        console.log(productId);
         await cartController.RemoveFromCart(userId, productId);
         CreateSuccessResponse(res, 200, "Xóa sản phẩm khỏi giỏ hàng thành công");
     } catch (error) {

@@ -40,7 +40,6 @@ app.use('/roles', require('./routes/roles'));
 app.use('/products', require('./routes/products'));
 app.use('/categories', require('./routes/categories'));
 app.use('/carts', require('./routes/carts'));
-app.use('/api/payments', paymentRoutes);
 
 
 

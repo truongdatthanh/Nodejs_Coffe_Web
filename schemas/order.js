@@ -6,7 +6,7 @@ let orderSchema = mongoose.Schema({
         ref: 'user',
     },
     items: [{
-        product: { type: mongoose.Types.ObjectId, ref: 'Product' },
+        product: { type: mongoose.Types.ObjectId, ref: 'product' },
         quantity: Number
       }],
     totalPrice:{
@@ -24,7 +24,10 @@ let orderSchema = mongoose.Schema({
         type:String,
         enum:["pending","processing","completed","cancelled"],
         default:"pending"
-    }
+    },
+    discountCode: {
+        type: String,
+    },
 }, {
     timestamps: true
 })

@@ -7,7 +7,7 @@ let wishlistSchema = mongoose.Schema({
         ref: 'user',
     },
     items: [{
-        product: { type: mongoose.Types.ObjectId, ref: 'Product' },
+        product: { type: mongoose.Types.ObjectId, ref: 'product' },
         quantity: Number
     }],
 }, {
