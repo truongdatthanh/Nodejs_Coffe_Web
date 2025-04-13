@@ -6,7 +6,7 @@ module.exports = {
     GetCart: async function (userId) {
         try {
             let user = await userSchema.findById(userId);
-            let cart = await cartSchema.findOne({ user: user._id }).populate('items.product')
+            let cart = await cartSchema.findOne({ user: user._id, status: "active" }).populate('items.product')
             if (!cart) {
                 throw new Error("Giỏ hàng của bạn đang trống")
             }
@@ -18,25 +18,26 @@ module.exports = {
 
     AddToCart: async function (userId, body) {
         try {
-            console.log(body.items[0].product);
+            console.log(body.name);
+         
             let user = await userSchema.findById(userId);
-            let cart = await cartSchema.findOne({ user: user._id });
-            let product = await productSchema.findOne({ name: body.items[0].product });
+            let cart = await cartSchema.findOne({ user: user._id, status: "active" });
+            let product = await productSchema.findOne({ name: body.name });
             if (!cart) {
                 cart = new cartSchema({
                     user: user._id,
-                    items: [{ product: product._id, quantity: body.items[0].quantity }]
+                    items: [{ product: product._id, quantity: body.quantity }]
                 });
                 return await cart.save();
             }
-            let itemIndex = cart.items.findIndex((item) =>  item.product.toString() === product._id.toString());
+            let itemIndex = cart.items.findIndex((item) => item.product.toString() === product._id.toString());
             console.log(itemIndex);
             if (itemIndex > -1) {
-                cart.items[itemIndex].quantity +=body.items[0].quantity;
+                cart.items[itemIndex].quantity += body.quantity;
             } else {
                 cart.items.push({
                     product: product._id,
-                    quantity: body.items[0].quantity
+                    quantity: body.quantity
                 });
             }
             return await cart.save();
@@ -45,32 +46,28 @@ module.exports = {
         }
     },
 
-    // RemoveFromCart: async function (userId, body) {
-    //     try {
-    //         let user = await userSchema.findById(userId);
-    //         let cart = await cartSchema.findOne({ user: user._id });
-    //         if (!cart) {
-    //             throw new Error("Giỏ hàng không tồn tại")
-    //         }
-    //         let itemIndex = cart.items.findIndex((item) => item.product.toString() === body.productId);
-    //         if (itemIndex > -1) {
-    //             cart.items[itemIndex].quantity -= body.quantity;
-    //             if (cart.items[itemIndex].quantity <= 0) {
-    //                 cart.items.splice(itemIndex, 1);
-    //             }
-    //         } else {
-    //             throw new Error("Sản phẩm không có trong giỏ hàng")
-    //         }
-    //         await cart.save();
-    //     } catch (error) {
-    //         throw new Error(error.message);
-    //     }
-    // },
+    UpdateCart: async function (userId, body) {
+        try {
+            let user = await userSchema.findById(userId);
+            let cart = await cartSchema.findOne({ user: user._id, status: "active" });
+
+            if (!cart) {
+                throw new Error("Không tìm thấy giỏ hàng");
+            }
+
+            cart.items = body.items;  
+            return await cart.save();
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    },
+    
+
 
     RemoveFromCart: async function (userId, productId) {
         try {
             let user = await userSchema.findById(userId);
-            let cart = await cartSchema.findOne({ user: user._id });
+            let cart = await cartSchema.findOne({ user: user._id, status: "active" });
             if (!cart) {
                 throw new Error("Giỏ hàng không tồn tại")
             }
@@ -84,7 +81,7 @@ module.exports = {
     ClearCart: async function (userId) {
         try {
             let user = await userSchema.findById(userId);
-            let cart = await cartSchema.findOne({ user: user._id });
+            let cart = await cartSchema.findOne({ user: user._id, status: "active" });
             cart.items = [];
             await cart.save();
         } catch (error) {

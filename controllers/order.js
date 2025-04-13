@@ -9,7 +9,8 @@ module.exports = {
         try {
             let user = await userSchema.findById(userId);
             let order = await orderSchema.find({ user: user._id }).populate('user', "username");
-            if (!order) {
+            console.log(order);
+            if (order.length === 0) {
                 throw new Error("Không có đơn hàng nào")
             }
             return order;
@@ -21,7 +22,7 @@ module.exports = {
         try {
             console.log(body);
             let user = await userSchema.findById(userId);
-            let cart = await cartSchema.findOne({ user: user._id }).populate('items.product');
+            let cart = await cartSchema.findOne({ user: user._id, status: "active" }).populate('items.product');
             if (!cart) {
                 throw new Error("Giỏ hàng của bạn đang trống")
             }

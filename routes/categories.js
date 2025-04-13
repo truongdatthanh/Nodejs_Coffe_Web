@@ -3,10 +3,12 @@ var router = express.Router();
 let categorySchema = require('../schemas/category')
 let slugify = require('slugify');
 const { CreateErrorResponse, CreateSuccessResponse } = require('../utils/responseHandler');
-const categoryController = require('../controllers/categories')
+const categoryController = require('../controllers/categories');
+const { check_authentication, check_authorization } = require('../utils/check_auth');
+const constants = require('../utils/constants');
 
-//get all
-router.get('/', async function (req, res, next) {
+
+router.get('/',check_authentication, async function (req, res, next) {
     let categories = await categorySchema.find({});
     if (categories.length === 0) {
         CreateErrorResponse(res, 404, "Không có danh mục nào");
@@ -15,18 +17,23 @@ router.get('/', async function (req, res, next) {
 });
 
 
-//get slug cate
-router.get('/:slug', async function (req, res, next) {
+
+router.get('/:slug',check_authentication, async function (req, res, next) {
     try {
-        let category = await categoryController.GetCategoryBySlug(req.params.slug);
+        let slug = req.params.slug;
+        console.log("abbc", slug);
+        if (!slug) {
+            console.log("abc", slug);
+        }
+        let category = await categoryController.GetCategoryBySlug(slug);
         CreateSuccessResponse(res, 200, category);
     } catch (error) {
         CreateErrorResponse(res, 404, error.message)
     }
 });
 
-//create
-router.post('/', async function (req, res, next) {
+
+router.post('/',check_authentication, check_authorization(constants.ADMIN_PERMISSION), async function (req, res, next) {
     try {
         let body = req.body;
         let newCategory = await categoryController.CreateCategory(body.name, body.description);
@@ -39,7 +46,7 @@ router.post('/', async function (req, res, next) {
 
 
 //update
-router.put('/:id', async function (req, res, next) {
+router.put('/:id',check_authentication, check_authorization(constants.ADMIN_PERMISSION), async function (req, res, next) {
     try {
         let body = req.body; 
         let updatedCategory = await categoryController.UpdateCategory(req.params.id, body.name);
@@ -51,7 +58,7 @@ router.put('/:id', async function (req, res, next) {
 
 
 //delete
-router.delete('/:id', async function (req, res, next) {
+router.delete('/:id',check_authentication, check_authorization(constants.ADMIN_PERMISSION), async function (req, res, next) {
     try {
         let deleteCategory = await categoryController.DeleteCategory(req.params.id);
         CreateSuccessResponse(res, 200, deleteCategory);

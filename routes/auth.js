@@ -45,10 +45,10 @@ router.post('/login', LoginValidator, validate, async function (req, res, next) 
 router.get('/logout', function (req, res, next) {
     CreateCookieResponse(res, 'token', "", Date.now());
 })
-router.get('/me', check_authentication, function (req, res, next) {
+router.get('/me', check_authentication, function (req, res, next) { 
     CreateSuccessResponse(res, 200, req.user)
 })
-router.post('/change_password', check_authentication,
+router.post('/change-password', check_authentication,
     function (req, res, next) {
         try {
             let oldpassword = req.body.oldpassword;

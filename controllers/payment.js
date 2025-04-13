@@ -17,7 +17,7 @@ module.exports = {
                 await orderSchema.findByIdAndUpdate(order._id, { status: 'completed' }, { new: true });
                 let cart = await cartSchema.findOne({ user: user._id });
                 if (cart) {
-                    cart.items = [];
+                    cart.status = "completed";
                     await cart.save();
                 }
                 return payment;

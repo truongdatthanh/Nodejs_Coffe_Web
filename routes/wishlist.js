@@ -17,7 +17,7 @@ router.get('/', check_authentication, async (req, res, next) => {
 });
 
 
-// Thêm sản phẩm vào wishlist
+
 router.post('/', check_authentication, async (req, res, next) => {
     try {
         let userId = req.user._id;
@@ -29,7 +29,7 @@ router.post('/', check_authentication, async (req, res, next) => {
     }
 });
 
-// Xoá sản phẩm khỏi wishlist
+
 router.delete('/',check_authentication, async (req, res, next) => {
     try {
         let userId = req.user._id;

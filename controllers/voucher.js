@@ -41,4 +41,17 @@ module.exports = {
             throw new Error(error.message);
         }
     },
+
+    GetVoucherByCode: async function (code) {
+        try {
+            let voucher = await voucherSchema.findOne({ code: code });
+            if (!voucher) {
+                throw new Error("Voucher not found");
+            }
+            console.log(voucher);
+            return voucher;
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    }
 }

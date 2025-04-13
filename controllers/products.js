@@ -18,6 +18,14 @@ module.exports = {
         return products;
     },
 
+    GetProductById: async function (id) {
+        let product = await productSchema.findById(id).populate('category', 'name');
+        if (!product) {
+            throw new Error("Không tìm thấy sản phẩm nào");
+        }
+        return product;
+    },
+
     CreateProduct: async function (body) {
         let category = await categorySchema.findOne({ name: body.category });
         let newProduct = new productSchema({

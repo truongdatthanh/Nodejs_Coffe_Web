@@ -6,13 +6,13 @@ let { CreateSuccessResponse, CreateErrorResponse } = require('../utils/responseH
 let{check_authentication,check_authorization} = require('../utils/check_auth');
 const constants = require('../utils/constants');
 
-/* GET users listing. */
 
 router.get('/',check_authentication,check_authorization(constants.MOD_PERMISSION), async function (req, res, next) {
   console.log(req.headers.authorization);
   let users = await userController.GetAllUser();
   CreateSuccessResponse(res, 200, users)
 });
+
 router.post('/', async function (req, res, next) {
   try {
     let body = req.body;
@@ -22,6 +22,7 @@ router.post('/', async function (req, res, next) {
     CreateErrorResponse(res, 404, error.message)
   }
 });
+
 router.put('/:id', async function (req, res, next) {
   try {
     let body = req.body;
